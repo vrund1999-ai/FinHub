@@ -3,18 +3,29 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 type Props = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   trailing?: ReactNode;
+  labelTrailing?: ReactNode;
 };
 
-export function TextField({ label, trailing, className, id, ...rest }: Props) {
+export function TextField({
+  label,
+  trailing,
+  labelTrailing,
+  className,
+  id,
+  ...rest
+}: Props) {
   const inputId = id ?? `f_${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
     <div className="flex flex-col gap-1.5">
-      <label
-        htmlFor={inputId}
-        className="text-xs font-medium text-[var(--color-text-muted)]"
-      >
-        {label}
-      </label>
+      <div className="flex items-center justify-between gap-2">
+        <label
+          htmlFor={inputId}
+          className="text-xs font-medium text-[var(--color-text-muted)]"
+        >
+          {label}
+        </label>
+        {labelTrailing}
+      </div>
       <div className="relative">
         <input
           id={inputId}

@@ -8,14 +8,22 @@ export default function HomePage() {
           Fin<span className="text-[var(--color-accent)]">Hub</span>
         </h1>
         <p className="mt-4 text-[var(--color-text-muted)]">
-          UI scaffolding. Try the sign up flow:
+          UI scaffolding. Try the auth flows:
         </p>
-        <Link
-          href="/signup"
-          className="mt-6 inline-block rounded-md border border-[var(--color-border-strong)] px-5 py-2 text-sm hover:border-[var(--color-accent)]"
-        >
-          /signup →
-        </Link>
+        <div className="mt-6 flex justify-center gap-3">
+          <Link
+            href="/signup"
+            className="inline-block rounded-md border border-[var(--color-border-strong)] px-5 py-2 text-sm hover:border-[var(--color-accent)]"
+          >
+            /signup →
+          </Link>
+          <Link
+            href="/login"
+            className="inline-block rounded-md border border-[var(--color-border-strong)] px-5 py-2 text-sm hover:border-[var(--color-accent)]"
+          >
+            /login →
+          </Link>
+        </div>
       </div>
     </main>
   );
