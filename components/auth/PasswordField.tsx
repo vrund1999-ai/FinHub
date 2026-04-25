@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { TextField } from "./TextField";
 
 export function PasswordField({
   label = "Password",
   placeholder = "Min. 8 characters",
+  autoComplete = "new-password",
+  labelTrailing,
 }: {
   label?: string;
   placeholder?: string;
+  autoComplete?: string;
+  labelTrailing?: ReactNode;
 }) {
   const [visible, setVisible] = useState(false);
   return (
@@ -16,7 +20,8 @@ export function PasswordField({
       label={label}
       type={visible ? "text" : "password"}
       placeholder={placeholder}
-      autoComplete="new-password"
+      autoComplete={autoComplete}
+      labelTrailing={labelTrailing}
       trailing={
         <button
           type="button"
