@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 import { OAuthButton } from "@/components/auth/OAuthButton";
@@ -13,6 +13,7 @@ import { StepEyebrow } from "@/components/signup/StepEyebrow";
 import { ProgressBar } from "@/components/signup/ProgressBar";
 import { PasswordStrengthMeter } from "@/components/signup/PasswordStrengthMeter";
 import { createClient } from "@/lib/supabase/client";
+import { useSignupDraft } from "./SignupDraftProvider";
 
 function splitFullName(full: string | undefined): [string, string] {
   if (!full) return ["", ""];
@@ -21,10 +22,10 @@ function splitFullName(full: string | undefined): [string, string] {
 }
 
 export default function SignupStep1Page() {
+  const { draft, update } = useSignupDraft();
   const [user, setUser] = useState<User | null>(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
 
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
@@ -33,15 +34,24 @@ export default function SignupStep1Page() {
       const u = data.user;
       if (!u) return;
       setUser(u);
+      // Read latest draft (hydration from sessionStorage may have completed
+      // after this effect's closure was created) so we don't clobber values
+      // the user already entered when revisiting Step 1.
+      const current = draftRef.current;
       const meta = u.user_metadata ?? {};
       const [fallbackFirst, fallbackLast] = splitFullName(
         meta.full_name ?? meta.name,
       );
-      setFirstName(meta.given_name ?? fallbackFirst);
-      setLastName(meta.family_name ?? fallbackLast);
-      setEmail(u.email ?? "");
+      const patch: Partial<typeof current> = { email: u.email ?? "" };
+      if (!current.firstName) {
+        patch.firstName = meta.given_name ?? fallbackFirst;
+      }
+      if (!current.lastName) {
+        patch.lastName = meta.family_name ?? fallbackLast;
+      }
+      update(patch);
     });
-  }, []);
+  }, [update]);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -60,7 +70,7 @@ export default function SignupStep1Page() {
         </h1>
         {signedIn ? (
           <p className="text-sm text-[var(--color-text-muted)]">
-            Signed in as {email}.{" "}
+            Signed in as {draft.email}.{" "}
             <button
               type="button"
               onClick={handleSignOut}
@@ -94,15 +104,15 @@ export default function SignupStep1Page() {
           label="First name"
           placeholder="Jane"
           autoComplete="given-name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          value={draft.firstName}
+          onChange={(e) => update({ firstName: e.target.value })}
         />
         <TextField
           label="Last name"
           placeholder="Smith"
           autoComplete="family-name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          value={draft.lastName}
+          onChange={(e) => update({ lastName: e.target.value })}
         />
       </div>
 
@@ -111,8 +121,8 @@ export default function SignupStep1Page() {
         type="email"
         placeholder="jane@example.com"
         autoComplete="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={draft.email}
+        onChange={(e) => update({ email: e.target.value })}
       />
 
       {!signedIn && (
