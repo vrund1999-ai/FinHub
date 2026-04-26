@@ -14,10 +14,16 @@ export function Select({
   placeholder,
   id,
   className,
+  value,
   defaultValue,
   ...rest
 }: Props) {
   const selectId = id ?? `sel_${label.toLowerCase().replace(/\s+/g, "-")}`;
+  const isControlled = value !== undefined;
+  const resolvedValue = isControlled ? (value ?? "") : undefined;
+  const resolvedDefault = !isControlled
+    ? (defaultValue ?? (placeholder ? "" : undefined))
+    : undefined;
   return (
     <div className="flex flex-col gap-1.5">
       <label
@@ -28,7 +34,8 @@ export function Select({
       </label>
       <select
         id={selectId}
-        defaultValue={defaultValue ?? (placeholder ? "" : undefined)}
+        value={resolvedValue}
+        defaultValue={resolvedDefault}
         className={`w-full appearance-none rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] bg-no-repeat px-3 py-2.5 pr-9 text-sm text-[var(--color-text)] transition-colors hover:border-[var(--color-border-strong)] focus:border-[var(--color-accent)] focus:outline-none ${className ?? ""}`}
         style={{
           backgroundImage:

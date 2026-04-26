@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { ArrowLeft, ArrowRight, BarChart3, Leaf, Settings } from "lucide-react";
 import { PrimaryButton } from "@/components/auth/PrimaryButton";
 import { SecondaryButton } from "@/components/auth/SecondaryButton";
@@ -9,8 +8,11 @@ import { StepEyebrow } from "@/components/signup/StepEyebrow";
 import { ProgressBar } from "@/components/signup/ProgressBar";
 import { ExperienceCard } from "@/components/signup/ExperienceCard";
 import { Select } from "@/components/signup/Select";
-
-type Level = "beginner" | "intermediate" | "advanced";
+import {
+  useSignupDraft,
+  type InvestmentGoal,
+  type WeeklyMarketTime,
+} from "../SignupDraftProvider";
 
 const GOAL_OPTIONS = [
   { value: "retirement", label: "Retirement" },
@@ -28,7 +30,7 @@ const TIME_OPTIONS = [
 ];
 
 export default function SignupStep2Page() {
-  const [level, setLevel] = useState<Level | null>("intermediate");
+  const { draft, update } = useSignupDraft();
 
   return (
     <>
@@ -49,22 +51,22 @@ export default function SignupStep2Page() {
           icon={<Leaf size={20} />}
           title="Beginner"
           description="New to investing and financial markets"
-          selected={level === "beginner"}
-          onClick={() => setLevel("beginner")}
+          selected={draft.level === "beginner"}
+          onClick={() => update({ level: "beginner" })}
         />
         <ExperienceCard
           icon={<BarChart3 size={20} />}
           title="Intermediate"
           description="Familiar with stocks, ETFs, and basic analysis"
-          selected={level === "intermediate"}
-          onClick={() => setLevel("intermediate")}
+          selected={draft.level === "intermediate"}
+          onClick={() => update({ level: "intermediate" })}
         />
         <ExperienceCard
           icon={<Settings size={20} />}
           title="Advanced"
           description="Options, derivatives, and technical analysis"
-          selected={level === "advanced"}
-          onClick={() => setLevel("advanced")}
+          selected={draft.level === "advanced"}
+          onClick={() => update({ level: "advanced" })}
         />
       </div>
 
@@ -72,20 +74,40 @@ export default function SignupStep2Page() {
         label="What are you primarily investing for? (optional)"
         options={GOAL_OPTIONS}
         placeholder="Select a goal..."
+        value={draft.investmentGoal ?? ""}
+        onChange={(e) =>
+          update({
+            investmentGoal: (e.target.value || null) as InvestmentGoal | null,
+          })
+        }
       />
 
       <Select
         label="How much time do you spend on markets weekly? (optional)"
         options={TIME_OPTIONS}
-        defaultValue="1-5"
+        value={draft.weeklyMarketTime ?? ""}
+        onChange={(e) =>
+          update({
+            weeklyMarketTime:
+              (e.target.value || null) as WeeklyMarketTime | null,
+          })
+        }
       />
 
       <div className="mt-2 flex justify-between gap-3">
         <Link href="/signup">
           <SecondaryButton icon={<ArrowLeft size={16} />}>Back</SecondaryButton>
         </Link>
-        <Link href="/signup/interests">
-          <PrimaryButton fullWidth={false} icon={<ArrowRight size={16} />}>
+        <Link
+          href="/signup/interests"
+          aria-disabled={draft.level === null}
+          className={draft.level === null ? "pointer-events-none" : ""}
+        >
+          <PrimaryButton
+            fullWidth={false}
+            icon={<ArrowRight size={16} />}
+            disabled={draft.level === null}
+          >
             Continue
           </PrimaryButton>
         </Link>
