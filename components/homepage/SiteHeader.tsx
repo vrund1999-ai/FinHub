@@ -9,7 +9,7 @@ import { LogoutButton } from "./LogoutButton";
 const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Markets", href: "/markets" },
   { label: "Screener", href: "/screener" },
-  { label: "News", href: "#" },
+  { label: "News", href: "/news" },
   { label: "Education", href: "#" },
 ];
 
