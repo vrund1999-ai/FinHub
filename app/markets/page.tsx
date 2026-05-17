@@ -38,7 +38,7 @@ export default function MarketsPage() {
             title="TOP GAINERS"
             items={topGainers}
             footerLabel="Screener"
-            footerHref="#"
+            footerHref="/screener"
           />
           <MoversList title="TOP LOSERS" items={topLosers} />
           <MarketNewsCard items={marketNews} />
