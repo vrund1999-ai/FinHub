@@ -32,6 +32,7 @@ export const tickerItems: TickerItem[] = [
   { label: "DJIA", value: "39,887.11", deltaPct: 0.31 },
   { label: "BTC", value: "$67,420", deltaPct: 1.84 },
   { label: "10Y", value: "4.512%", deltaPct: -0.03 },
+  { label: "OIL", value: "$78.42", deltaPct: 0.74 },
 ];
 
 export const marketIndices: MarketIndex[] = [

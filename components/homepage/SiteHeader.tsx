@@ -6,7 +6,12 @@ import { SecondaryButton } from "@/components/auth/SecondaryButton";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "./LogoutButton";
 
-const NAV_LINKS = ["Markets", "Screener", "News", "Education"];
+const NAV_LINKS: { label: string; href: string }[] = [
+  { label: "Markets", href: "/markets" },
+  { label: "Screener", href: "#" },
+  { label: "News", href: "#" },
+  { label: "Education", href: "#" },
+];
 
 function pickFirstName(user: User): string {
   const meta = user.user_metadata ?? {};
@@ -32,7 +37,11 @@ async function getCurrentUser(): Promise<User | null> {
   return data.user;
 }
 
-export async function SiteHeader() {
+export async function SiteHeader({
+  activeNavItem,
+}: {
+  activeNavItem?: string;
+} = {}) {
   const user = await getCurrentUser();
 
   return (
@@ -43,15 +52,23 @@ export async function SiteHeader() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7">
-          {NAV_LINKS.map((label) => (
-            <a
-              key={label}
-              href="#"
-              className="text-sm font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
-            >
-              {label}
-            </a>
-          ))}
+          {NAV_LINKS.map(({ label, href }) => {
+            const isActive = label === activeNavItem;
+            return (
+              <Link
+                key={label}
+                href={href}
+                aria-current={isActive ? "page" : undefined}
+                className={
+                  isActive
+                    ? "text-sm font-medium text-[var(--color-accent)]"
+                    : "text-sm font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)]"
+                }
+              >
+                {label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-3">
