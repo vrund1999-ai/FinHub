@@ -12,12 +12,23 @@ import {
   learningTracks,
   popularGuides,
   dailyQuiz,
-  trendingTerms,
 } from "@/components/education/data";
-import { fetchAllGlossaryTerms } from "@/lib/glossary/queries";
+import {
+  fetchAllGlossaryTerms,
+  fetchTrendingTerms,
+} from "@/lib/glossary/queries";
+
+export const revalidate = 60;
 
 export default async function EducationPage() {
-  const allTerms = await fetchAllGlossaryTerms();
+  const [allTerms, trendingRows] = await Promise.all([
+    fetchAllGlossaryTerms(),
+    fetchTrendingTerms(7),
+  ]);
+  const trending = trendingRows.map((row) => ({
+    label: row.term,
+    slug: row.slug,
+  }));
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -34,7 +45,7 @@ export default async function EducationPage() {
               <PopularGuides items={popularGuides} />
               <DailyQuiz quiz={dailyQuiz} />
               <StreakBar streakDays={7} pointsThisWeek={124} />
-              <TrendingTerms terms={trendingTerms} />
+              <TrendingTerms terms={trending} />
             </aside>
           </div>
         </GlossaryProvider>

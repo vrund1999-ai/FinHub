@@ -1,5 +1,6 @@
 import Link from "next/link";
-import type { TrendingTerm } from "./data";
+
+export type TrendingTerm = { label: string; slug: string };
 
 export function TrendingTerms({ terms }: { terms: TrendingTerm[] }) {
   return (

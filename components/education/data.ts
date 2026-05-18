@@ -25,8 +25,6 @@ export type QuizQuestion = {
   choices: string[];
 };
 
-export type TrendingTerm = { label: string; slug: string };
-
 export const ALPHABET = [
   "A","B","C","D","E","F","G","H","I","J","K","L","M",
   "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -95,13 +93,3 @@ export const dailyQuiz: QuizQuestion = {
   ],
 };
 
-// Trending term slugs reference real entries seeded in 0003_glossary_terms_seed.sql.
-export const trendingTerms: TrendingTerm[] = [
-  { label: "Yield curve", slug: "yield-curve" },
-  { label: "Quantitative easing", slug: "quantitative-easing" },
-  { label: "Recession", slug: "recession" },
-  { label: "Short selling", slug: "short-selling" },
-  { label: "Implied volatility", slug: "implied-volatility" },
-  { label: "EBITDA", slug: "ebitda" },
-  { label: "Stock split", slug: "stock-split" },
-];
