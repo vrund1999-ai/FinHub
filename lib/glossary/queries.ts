@@ -62,3 +62,23 @@ export async function fetchAllGlossarySlugs(): Promise<string[]> {
   if (error) throw error;
   return (data ?? []).map((row) => row.slug as string);
 }
+
+export type TrendingTermRow = {
+  slug: string;
+  term: string;
+  view_count: number;
+};
+
+export async function fetchTrendingTerms(limit = 7): Promise<TrendingTermRow[]> {
+  const supabase = createStaticClient();
+  const { data, error } = await supabase.rpc("get_trending_terms", {
+    p_limit: limit,
+  });
+  // Trending is decorative — degrade to empty if the RPC is missing or errors
+  // so /education still renders. Log so the failure is visible.
+  if (error) {
+    console.warn("fetchTrendingTerms failed:", error.message);
+    return [];
+  }
+  return (data ?? []) as TrendingTermRow[];
+}
