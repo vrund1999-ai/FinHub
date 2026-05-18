@@ -1,4 +1,5 @@
-export type Difficulty = "Basic" | "Beginner" | "Intermediate" | "Advanced";
+export type { Difficulty } from "@/lib/glossary/categories";
+import type { Difficulty } from "@/lib/glossary/categories";
 
 export type LearningTrack = {
   id: string;
@@ -8,12 +9,6 @@ export type LearningTrack = {
   progressPct: number;
   accentColor: string;
   iconName: "TrendingUp" | "BarChart2" | "Landmark" | "Layers";
-};
-
-export type GlossaryEntry = {
-  term: string;
-  difficulty: Difficulty;
-  definition: string;
 };
 
 export type PopularGuide = {
@@ -30,18 +25,12 @@ export type QuizQuestion = {
   choices: string[];
 };
 
-export type TrendingTerm = { label: string };
+export type TrendingTerm = { label: string; slug: string };
 
 export const ALPHABET = [
   "A","B","C","D","E","F","G","H","I","J","K","L","M",
   "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
 ] as const;
-
-export const ACTIVE_LETTERS: ReadonlySet<string> = new Set([
-  "A","B","C","D","E",
-]);
-
-export const DEFAULT_SELECTED_LETTER = "A";
 
 export const learningTracks: LearningTrack[] = [
   {
@@ -86,29 +75,6 @@ export const learningTracks: LearningTrack[] = [
   },
 ];
 
-export const glossaryEntries: Record<string, GlossaryEntry[]> = {
-  A: [
-    {
-      term: "Alpha",
-      difficulty: "Intermediate",
-      definition:
-        "Excess return of an investment relative to a benchmark index, after adjusting for risk.",
-    },
-    {
-      term: "Arbitrage",
-      difficulty: "Advanced",
-      definition:
-        "Simultaneously buying and selling an asset in different markets to profit from price differences.",
-    },
-    {
-      term: "Asset allocation",
-      difficulty: "Basic",
-      definition:
-        "The strategy of dividing a portfolio among different asset classes like stocks, bonds, and cash.",
-    },
-  ],
-};
-
 export const popularGuides: PopularGuide[] = [
   { rank: 1, title: "How to read a P&L statement", difficulty: "Beginner", readTime: "6 min read" },
   { rank: 2, title: "Dollar-cost averaging explained", difficulty: "Beginner", readTime: "4 min read" },
@@ -129,12 +95,13 @@ export const dailyQuiz: QuizQuestion = {
   ],
 };
 
+// Trending term slugs reference real entries seeded in 0003_glossary_terms_seed.sql.
 export const trendingTerms: TrendingTerm[] = [
-  { label: "Yield curve" },
-  { label: "Quantitative easing" },
-  { label: "Bear market" },
-  { label: "Short interest" },
-  { label: "Margin call" },
-  { label: "EBITDA" },
-  { label: "Stock split" },
+  { label: "Yield curve", slug: "yield-curve" },
+  { label: "Quantitative easing", slug: "quantitative-easing" },
+  { label: "Recession", slug: "recession" },
+  { label: "Short selling", slug: "short-selling" },
+  { label: "Implied volatility", slug: "implied-volatility" },
+  { label: "EBITDA", slug: "ebitda" },
+  { label: "Stock split", slug: "stock-split" },
 ];

@@ -1,6 +1,11 @@
+"use client";
+
 import { Search } from "lucide-react";
+import { useGlossary } from "./GlossaryProvider";
 
 export function EducationHero() {
+  const { query, setQuery } = useGlossary();
+
   return (
     <section className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-8">
       <span className="text-[11px] font-semibold tracking-[0.16em] text-[var(--color-accent)]">
@@ -22,6 +27,8 @@ export function EducationHero() {
         />
         <input
           type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search a term, concept, or topic…"
           className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface-2)] py-3 pl-10 pr-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-dim)] focus:border-[var(--color-accent)] focus:outline-none"
         />

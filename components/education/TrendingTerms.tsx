@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { TrendingTerm } from "./data";
 
 export function TrendingTerms({ terms }: { terms: TrendingTerm[] }) {
@@ -8,13 +9,13 @@ export function TrendingTerms({ terms }: { terms: TrendingTerm[] }) {
       </h2>
       <div className="flex flex-wrap gap-1.5">
         {terms.map((term) => (
-          <button
-            key={term.label}
-            type="button"
+          <Link
+            key={term.slug}
+            href={`/education/glossary/${term.slug}`}
             className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-text)]"
           >
             {term.label}
-          </button>
+          </Link>
         ))}
       </div>
     </section>
