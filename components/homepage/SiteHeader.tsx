@@ -10,7 +10,7 @@ const NAV_LINKS: { label: string; href: string }[] = [
   { label: "Markets", href: "/markets" },
   { label: "Screener", href: "/screener" },
   { label: "News", href: "/news" },
-  { label: "Education", href: "#" },
+  { label: "Education", href: "/education" },
 ];
 
 function pickFirstName(user: User): string {
