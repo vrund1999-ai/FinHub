@@ -18,13 +18,6 @@ export type PopularGuide = {
   readTime: string;
 };
 
-export type QuizQuestion = {
-  questionNumber: number;
-  totalQuestions: number;
-  prompt: string;
-  choices: string[];
-};
-
 export const ALPHABET = [
   "A","B","C","D","E","F","G","H","I","J","K","L","M",
   "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -80,16 +73,4 @@ export const popularGuides: PopularGuide[] = [
   { rank: 4, title: "Portfolio diversification 101", difficulty: "Beginner", readTime: "5 min read" },
   { rank: 5, title: "Calls vs puts — a plain-language guide", difficulty: "Advanced", readTime: "10 min read" },
 ];
-
-export const dailyQuiz: QuizQuestion = {
-  questionNumber: 1,
-  totalQuestions: 3,
-  prompt: "What does a company's P/E ratio measure?",
-  choices: [
-    "Its profit margin vs expenses",
-    "Price relative to earnings per share",
-    "Price relative to total equity",
-    "Its dividend yield percentage",
-  ],
-};
 

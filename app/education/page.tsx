@@ -5,20 +5,17 @@ import { LearningTracksSection } from "@/components/education/LearningTracksSect
 import { GlossarySection } from "@/components/education/GlossarySection";
 import { GlossaryProvider } from "@/components/education/GlossaryProvider";
 import { PopularGuides } from "@/components/education/PopularGuides";
-import { DailyQuiz } from "@/components/education/DailyQuiz";
-import { StreakBar } from "@/components/education/StreakBar";
+import { PersonalSidebar } from "@/components/education/PersonalSidebar";
 import { TrendingTerms } from "@/components/education/TrendingTerms";
-import {
-  learningTracks,
-  popularGuides,
-  dailyQuiz,
-} from "@/components/education/data";
+import { learningTracks, popularGuides } from "@/components/education/data";
 import {
   fetchAllGlossaryTerms,
   fetchTrendingTerms,
 } from "@/lib/glossary/queries";
 
-export const revalidate = 60;
+// Per-user quiz + streak data is read in <PersonalSidebar> via cookies(),
+// which forces this route into dynamic rendering.
+export const dynamic = "force-dynamic";
 
 export default async function EducationPage() {
   const [allTerms, trendingRows] = await Promise.all([
@@ -43,8 +40,7 @@ export default async function EducationPage() {
             </div>
             <aside className="flex flex-col gap-6">
               <PopularGuides items={popularGuides} />
-              <DailyQuiz quiz={dailyQuiz} />
-              <StreakBar streakDays={7} pointsThisWeek={124} />
+              <PersonalSidebar />
               <TrendingTerms terms={trending} />
             </aside>
           </div>
