@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/homepage/SiteFooter";
 import { GlossaryBreadcrumb } from "@/components/education/GlossaryBreadcrumb";
 import { GlossaryDetailHero } from "@/components/education/GlossaryDetailHero";
 import { GlossaryExamples } from "@/components/education/GlossaryExamples";
+import { GlossaryViewTracker } from "@/components/education/GlossaryViewTracker";
 import { RelatedTerms } from "@/components/education/RelatedTerms";
 import {
   fetchAllGlossarySlugs,
@@ -40,6 +41,7 @@ export default async function GlossaryDetailPage({ params }: Params) {
     <div className="flex min-h-screen flex-col">
       <SiteHeader activeNavItem="Education" />
       <main className="mx-auto flex w-full max-w-screen-lg flex-1 flex-col gap-6 px-6 py-6">
+        <GlossaryViewTracker slug={slug} />
         <GlossaryBreadcrumb term={term.term} />
         <GlossaryDetailHero term={term} />
         {term.extended_definition && (

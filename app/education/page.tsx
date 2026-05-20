@@ -7,19 +7,25 @@ import { GlossaryProvider } from "@/components/education/GlossaryProvider";
 import { PopularGuides } from "@/components/education/PopularGuides";
 import { PersonalSidebar } from "@/components/education/PersonalSidebar";
 import { TrendingTerms } from "@/components/education/TrendingTerms";
+import { learningTracks, popularGuides } from "@/components/education/data";
 import {
-  learningTracks,
-  popularGuides,
-  trendingTerms,
-} from "@/components/education/data";
-import { fetchAllGlossaryTerms } from "@/lib/glossary/queries";
+  fetchAllGlossaryTerms,
+  fetchTrendingTerms,
+} from "@/lib/glossary/queries";
 
 // Per-user quiz + streak data is read in <PersonalSidebar> via cookies(),
 // which forces this route into dynamic rendering.
 export const dynamic = "force-dynamic";
 
 export default async function EducationPage() {
-  const allTerms = await fetchAllGlossaryTerms();
+  const [allTerms, trendingRows] = await Promise.all([
+    fetchAllGlossaryTerms(),
+    fetchTrendingTerms(7),
+  ]);
+  const trending = trendingRows.map((row) => ({
+    label: row.term,
+    slug: row.slug,
+  }));
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -35,7 +41,7 @@ export default async function EducationPage() {
             <aside className="flex flex-col gap-6">
               <PopularGuides items={popularGuides} />
               <PersonalSidebar />
-              <TrendingTerms terms={trendingTerms} />
+              <TrendingTerms terms={trending} />
             </aside>
           </div>
         </GlossaryProvider>
