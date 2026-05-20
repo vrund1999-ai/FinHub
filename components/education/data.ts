@@ -1,5 +1,4 @@
 export type { Difficulty } from "@/lib/glossary/categories";
-import type { Difficulty } from "@/lib/glossary/categories";
 
 export type LearningTrack = {
   id: string;
@@ -9,13 +8,6 @@ export type LearningTrack = {
   progressPct: number;
   accentColor: string;
   iconName: "TrendingUp" | "BarChart2" | "Landmark" | "Layers";
-};
-
-export type PopularGuide = {
-  rank: number;
-  title: string;
-  difficulty: Difficulty;
-  readTime: string;
 };
 
 export const ALPHABET = [
@@ -64,13 +56,5 @@ export const learningTracks: LearningTrack[] = [
     accentColor: "#a78bfa",
     iconName: "Layers",
   },
-];
-
-export const popularGuides: PopularGuide[] = [
-  { rank: 1, title: "How to read a P&L statement", difficulty: "Beginner", readTime: "6 min read" },
-  { rank: 2, title: "Dollar-cost averaging explained", difficulty: "Beginner", readTime: "4 min read" },
-  { rank: 3, title: "How the Fed sets interest rates", difficulty: "Intermediate", readTime: "6 min read" },
-  { rank: 4, title: "Portfolio diversification 101", difficulty: "Beginner", readTime: "5 min read" },
-  { rank: 5, title: "Calls vs puts — a plain-language guide", difficulty: "Advanced", readTime: "10 min read" },
 ];
 
