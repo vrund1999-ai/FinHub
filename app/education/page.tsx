@@ -7,23 +7,29 @@ import { GlossaryProvider } from "@/components/education/GlossaryProvider";
 import { PopularGuides } from "@/components/education/PopularGuides";
 import { PersonalSidebar } from "@/components/education/PersonalSidebar";
 import { TrendingTerms } from "@/components/education/TrendingTerms";
-import { learningTracks } from "@/components/education/data";
 import {
   fetchAllGlossaryTerms,
   fetchTrendingTerms,
 } from "@/lib/glossary/queries";
 import { fetchFeaturedGuides } from "@/lib/guides/queries";
+import {
+  fetchFeaturedTracks,
+  fetchUserTrackProgress,
+} from "@/lib/tracks/queries";
 
 // Per-user quiz + streak data is read in <PersonalSidebar> via cookies(),
 // which forces this route into dynamic rendering.
 export const dynamic = "force-dynamic";
 
 export default async function EducationPage() {
-  const [allTerms, trendingRows, featuredGuides] = await Promise.all([
-    fetchAllGlossaryTerms(),
-    fetchTrendingTerms(7),
-    fetchFeaturedGuides(5),
-  ]);
+  const [allTerms, trendingRows, featuredGuides, featuredTracks, trackProgress] =
+    await Promise.all([
+      fetchAllGlossaryTerms(),
+      fetchTrendingTerms(7),
+      fetchFeaturedGuides(5),
+      fetchFeaturedTracks(4),
+      fetchUserTrackProgress(),
+    ]);
   const trending = trendingRows.map((row) => ({
     label: row.term,
     slug: row.slug,
@@ -37,7 +43,10 @@ export default async function EducationPage() {
           <EducationHero />
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
             <div className="flex flex-col gap-6">
-              <LearningTracksSection tracks={learningTracks} />
+              <LearningTracksSection
+                tracks={featuredTracks}
+                progress={trackProgress}
+              />
               <GlossarySection />
             </div>
             <aside className="flex flex-col gap-6">
