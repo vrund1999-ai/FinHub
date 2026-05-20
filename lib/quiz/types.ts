@@ -1,7 +1,7 @@
 import type { Category, Difficulty } from "@/lib/glossary/categories";
 
 export type QuizQuestionForUser = {
-  position: number;
+  slot: number;
   question_id: string;
   prompt: string;
   choices: string[];
@@ -19,7 +19,7 @@ export type DailyQuizPayload = {
 };
 
 export type SubmitInput = {
-  position: number;
+  slot: number;
   chosenIndex: number;
 };
 
@@ -50,4 +50,4 @@ export type FetchDailyQuizResult =
 
 export type SubmitQuizAnswerResult =
   | { ok: true; result: SubmitResult }
-  | { ok: false; error: "not_authenticated" | "invalid_position" | "invalid_choice" | "no_assignment_for_today" | "unknown" };
+  | { ok: false; error: "not_authenticated" | "invalid_slot" | "invalid_choice" | "no_assignment_for_today" | "unknown" };

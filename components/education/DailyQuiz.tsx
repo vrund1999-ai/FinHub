@@ -14,7 +14,7 @@ type RevealedQuestion = QuizQuestionForUser & { revealed: boolean };
 function hydrate(payload: DailyQuizPayload): RevealedQuestion[] {
   return payload.questions
     .slice()
-    .sort((a, b) => a.position - b.position)
+    .sort((a, b) => a.slot - b.slot)
     .map((q) => ({ ...q, revealed: q.chosen_index !== null }));
 }
 
@@ -52,7 +52,7 @@ export function DailyQuiz({ initial }: { initial: DailyQuizPayload }) {
     setSubmitError(null);
     startTransition(async () => {
       const res = await submitQuizAnswer({
-        position: current.position,
+        slot: current.slot,
         chosenIndex: choiceIndex,
       });
       if (!res.ok) {
@@ -115,7 +115,7 @@ export function DailyQuiz({ initial }: { initial: DailyQuizPayload }) {
   return (
     <DailyQuizShell>
       <span className="text-[10px] font-semibold tracking-[0.16em] text-[var(--color-accent)]">
-        QUESTION {current.position} OF {total}
+        QUESTION {current.slot} OF {total}
       </span>
       <p className="text-sm font-medium leading-snug text-[var(--color-text)]">
         {current.prompt}

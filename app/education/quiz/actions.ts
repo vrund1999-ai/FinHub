@@ -12,11 +12,11 @@ export async function submitQuizAnswer(
   input: SubmitInput,
 ): Promise<SubmitQuizAnswerResult> {
   if (
-    !Number.isInteger(input.position) ||
-    input.position < 1 ||
-    input.position > 3
+    !Number.isInteger(input.slot) ||
+    input.slot < 1 ||
+    input.slot > 3
   ) {
-    return { ok: false, error: "invalid_position" };
+    return { ok: false, error: "invalid_slot" };
   }
   if (!Number.isInteger(input.chosenIndex) || input.chosenIndex < 0) {
     return { ok: false, error: "invalid_choice" };
@@ -29,13 +29,13 @@ export async function submitQuizAnswer(
   if (!user) return { ok: false, error: "not_authenticated" };
 
   const { data, error } = await supabase.rpc("submit_quiz_answer", {
-    p_position: input.position,
+    p_slot: input.slot,
     p_chosen_index: input.chosenIndex,
   });
   if (error) {
     const msg = error.message ?? "";
     if (msg.includes("not_authenticated")) return { ok: false, error: "not_authenticated" };
-    if (msg.includes("invalid_position")) return { ok: false, error: "invalid_position" };
+    if (msg.includes("invalid_slot")) return { ok: false, error: "invalid_slot" };
     if (msg.includes("invalid_choice")) return { ok: false, error: "invalid_choice" };
     if (msg.includes("no_assignment_for_today"))
       return { ok: false, error: "no_assignment_for_today" };

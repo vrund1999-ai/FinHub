@@ -70,12 +70,12 @@ create table if not exists public.quiz_attempts (
   user_id      uuid not null references auth.users(id) on delete cascade,
   question_id  uuid not null references public.quiz_questions(id) on delete cascade,
   quiz_date    date not null,
-  position     smallint not null check (position between 1 and 3),
+  slot         smallint not null check (slot between 1 and 3),
   chosen_index smallint not null,
   is_correct   boolean not null,
   cycle_number smallint not null default 1,
   answered_at  timestamptz not null default now(),
-  unique (user_id, quiz_date, position)
+  unique (user_id, quiz_date, slot)
 );
 
 create index if not exists quiz_attempts_user_question_idx on public.quiz_attempts(user_id, question_id);
@@ -124,7 +124,7 @@ create trigger user_quiz_stats_set_updated_at
 -- ---------------------------------------------------------------------------
 create or replace function public.get_or_create_daily_quiz()
 returns table (
-  position      smallint,
+  slot          smallint,
   question_id   uuid,
   prompt        text,
   choices       jsonb,
@@ -213,7 +213,7 @@ begin
 
   return query
   select
-    u.ord::smallint                                                   as position,
+    u.ord::smallint                                                   as slot,
     q.id                                                              as question_id,
     q.prompt,
     q.choices,
@@ -229,7 +229,7 @@ begin
   left join public.quiz_attempts qa
     on qa.user_id = v_uid
    and qa.quiz_date = v_today
-   and qa.position = u.ord::smallint
+   and qa.slot = u.ord::smallint
   order by u.ord;
 end;
 $$;
@@ -238,13 +238,13 @@ revoke execute on function public.get_or_create_daily_quiz() from public;
 grant   execute on function public.get_or_create_daily_quiz() to authenticated;
 
 -- ---------------------------------------------------------------------------
--- RPC: submit_quiz_answer(p_position, p_chosen_index)
--- Idempotent (unique on (user_id, quiz_date, position) makes double-clicks
+-- RPC: submit_quiz_answer(p_slot, p_chosen_index)
+-- Idempotent (unique on (user_id, quiz_date, slot) makes double-clicks
 -- safe). Awards 10 points per correct answer the first time the slot is
 -- filled. On the 3rd answer of the day, updates streak.
 -- ---------------------------------------------------------------------------
 create or replace function public.submit_quiz_answer(
-  p_position     smallint,
+  p_slot         smallint,
   p_chosen_index smallint
 )
 returns table (
@@ -283,8 +283,8 @@ begin
   if v_uid is null then
     raise exception 'not_authenticated' using errcode = '42501';
   end if;
-  if p_position is null or p_position < 1 or p_position > 3 then
-    raise exception 'invalid_position' using errcode = '22023';
+  if p_slot is null or p_slot < 1 or p_slot > 3 then
+    raise exception 'invalid_slot' using errcode = '22023';
   end if;
   if p_chosen_index is null or p_chosen_index < 0 then
     raise exception 'invalid_choice' using errcode = '22023';
@@ -298,17 +298,17 @@ begin
   if v_qids is null then
     raise exception 'no_assignment_for_today' using errcode = '42704';
   end if;
-  v_qid := v_qids[p_position];
+  v_qid := v_qids[p_slot];
 
   select q.correct_index, q.explanation into v_correct_idx, v_explanation
   from public.quiz_questions q where q.id = v_qid;
   v_is_correct := (p_chosen_index = v_correct_idx);
 
   insert into public.quiz_attempts
-    (user_id, question_id, quiz_date, position, chosen_index, is_correct, cycle_number)
+    (user_id, question_id, quiz_date, slot, chosen_index, is_correct, cycle_number)
   values
-    (v_uid, v_qid, v_today, p_position, p_chosen_index, v_is_correct, v_cycle)
-  on conflict (user_id, quiz_date, position) do nothing;
+    (v_uid, v_qid, v_today, p_slot, p_chosen_index, v_is_correct, v_cycle)
+  on conflict (user_id, quiz_date, slot) do nothing;
   get diagnostics v_rowcount = row_count;
   v_inserted := (v_rowcount > 0);
 
