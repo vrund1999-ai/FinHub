@@ -7,4 +7,5 @@ out/
 next-env.d.ts
 *.tsbuildinfo
 creds/
-.claude/
+.claude/*
+!.claude/skills/

@@ -1,0 +1,178 @@
+-- Initial curated guides — 24 evergreen finance explainers from reputable
+-- publishers (SEC, Federal Reserve, Fidelity, Schwab, Vanguard, NerdWallet,
+-- Morningstar, FINRA, IRS, Corporate Finance Institute). Refreshed by the
+-- /refresh-guides Claude Code skill, which emits subsequent migrations.
+
+insert into public.guides
+  (slug, title, url, source, description, category, difficulty, read_time_minutes, is_featured, featured_rank)
+values
+  -- ============== Featured (shown in /education sidebar) ==============
+  ('vanguard-how-to-start-investing',
+   'How to start investing: A guide for beginners',
+   'https://investor.vanguard.com/investor-resources-education/article/how-to-start-investing',
+   'Vanguard',
+   'Six concrete steps to open your first investment account, pick a strategy, and put money to work.',
+   'Investing Basics', 'Beginner', 8, true, 1),
+
+  ('schwab-what-is-dollar-cost-averaging',
+   'What Is Dollar-Cost Averaging?',
+   'https://www.schwab.com/learn/story/what-is-dollar-cost-averaging',
+   'Charles Schwab',
+   'Why investing a fixed amount on a regular schedule blunts volatility — with worked examples.',
+   'Investing Basics', 'Beginner', 5, true, 2),
+
+  ('sec-beginners-guide-financial-statements',
+   'Beginners'' Guide to Financial Statements',
+   'https://www.sec.gov/about/reports-publications/beginners-guide-financial-statements',
+   'SEC',
+   'The SEC''s plain-language walkthrough of the balance sheet, income statement, and cash flow statement.',
+   'Reading Financials', 'Beginner', 12, true, 3),
+
+  ('federalreserve-fed-explained-monetary-policy',
+   'The Fed Explained: Monetary Policy',
+   'https://www.federalreserve.gov/aboutthefed/fedexplained/monetary-policy.htm',
+   'Federal Reserve',
+   'How the FOMC sets the federal funds rate, the tools it uses, and how decisions transmit to markets.',
+   'Macro & Economy', 'Intermediate', 10, true, 4),
+
+  ('fidelity-what-are-options',
+   'What are options, and how do they work?',
+   'https://www.fidelity.com/learning-center/smart-money/what-are-options',
+   'Fidelity',
+   'A clear introduction to calls, puts, strike prices, expirations, and premiums for first-time options traders.',
+   'Options & Derivatives', 'Intermediate', 7, true, 5),
+
+  -- ============== Library (not featured) ==============
+  ('nerdwallet-how-to-start-investing',
+   'How to Start Investing: A Guide for Beginners',
+   'https://www.nerdwallet.com/investing/learn/how-to-start-investing',
+   'NerdWallet',
+   'Step-by-step framework covering goals, account types, and choosing your first investments.',
+   'Investing Basics', 'Beginner', 9, false, null),
+
+  ('fidelity-guide-to-diversification',
+   'Guide to diversification',
+   'https://www.fidelity.com/viewpoints/investing-ideas/guide-to-diversification',
+   'Fidelity',
+   'Why spreading bets across asset classes reduces risk, and how to build a diversified mix.',
+   'Investing Basics', 'Beginner', 8, false, null),
+
+  ('sec-beginners-guide-asset-allocation',
+   'Beginners'' Guide to Asset Allocation, Diversification, and Rebalancing',
+   'https://www.sec.gov/about/reports-publications/investorpubsassetallocationhtm',
+   'SEC',
+   'The SEC on stocks-vs-bonds-vs-cash mixes, why diversification matters, and when to rebalance.',
+   'Investing Basics', 'Beginner', 14, false, null),
+
+  ('cfi-three-financial-statements',
+   'The 3 Financial Statements: Income Statement, Balance Sheet, Cash Flow',
+   'https://corporatefinanceinstitute.com/resources/accounting/three-financial-statements/',
+   'Corporate Finance Institute',
+   'How the three core statements connect, with worked examples for each line item.',
+   'Reading Financials', 'Intermediate', 11, false, null),
+
+  ('schwab-pe-ratio',
+   'What Is the P/E Ratio? Why Investors Use It',
+   'https://www.schwab.com/learn/story/stock-analysis-using-pe-ratio',
+   'Charles Schwab',
+   'Calculating P/E, why high or low isn''t inherently good, and how to compare across peers.',
+   'Reading Financials', 'Intermediate', 6, false, null),
+
+  ('fidelity-what-is-balance-sheet',
+   'What is a balance sheet and how do you read one?',
+   'https://www.fidelity.com/learning-center/trading-investing/what-is-a-balance-sheet',
+   'Fidelity',
+   'Assets, liabilities, equity — what each line means and what the ratios tell you about a business.',
+   'Reading Financials', 'Beginner', 7, false, null),
+
+  ('schwab-3-order-types',
+   '3 Order Types: Market, Limit, and Stop Orders',
+   'https://www.schwab.com/learn/story/3-order-types-market-limit-and-stop-orders',
+   'Charles Schwab',
+   'When to use each order type and how they behave in fast-moving markets.',
+   'Markets & Trading', 'Beginner', 6, false, null),
+
+  ('finra-order-types',
+   'Order Types',
+   'https://www.finra.org/investors/investing/investment-products/stocks/order-types',
+   'FINRA',
+   'FINRA''s reference for every common stock order type, with edge cases retail investors hit.',
+   'Markets & Trading', 'Beginner', 5, false, null),
+
+  ('sec-stop-stop-limit-trailing-stop',
+   'Investor Bulletin: Stop, Stop-Limit, and Trailing Stop Orders',
+   'https://www.sec.gov/resources-investors/investor-alerts-bulletins/stop-stop-limits-trading-stop-orders',
+   'SEC',
+   'How protective stop orders actually fill in volatile markets — and the failure modes to know.',
+   'Markets & Trading', 'Intermediate', 9, false, null),
+
+  ('schwab-basic-call-put-strategies',
+   'Basic Call and Put Options Strategies',
+   'https://www.schwab.com/learn/story/basic-call-and-put-options-strategies',
+   'Charles Schwab',
+   'The four foundational options positions: long call, long put, covered call, protective put.',
+   'Options & Derivatives', 'Intermediate', 8, false, null),
+
+  ('fidelity-how-to-trade-options',
+   'How to trade options',
+   'https://www.fidelity.com/learning-center/trading-investing/options-trading-first-steps',
+   'Fidelity',
+   'Approval levels, multi-leg strategies, and the mechanics of placing an options order.',
+   'Options & Derivatives', 'Advanced', 12, false, null),
+
+  ('fidelity-ira-vs-401k',
+   'IRA vs. 401(k): What''s the difference?',
+   'https://www.fidelity.com/learning-center/smart-money/ira-vs-401k',
+   'Fidelity',
+   'Contribution limits, employer match, tax treatment — when to use each (or both).',
+   'Retirement', 'Beginner', 6, false, null),
+
+  ('fidelity-roth-ira-vs-401k',
+   'Roth IRA vs. 401(k): What''s the difference?',
+   'https://www.fidelity.com/learning-center/smart-money/roth-ira-vs-401k',
+   'Fidelity',
+   'After-tax Roth contributions vs pre-tax 401(k): how to choose given your income and bracket.',
+   'Retirement', 'Intermediate', 7, false, null),
+
+  ('irs-topic-409-capital-gains',
+   'Topic no. 409, Capital gains and losses',
+   'https://www.irs.gov/taxtopics/tc409',
+   'IRS',
+   'The IRS''s official reference on short-term vs long-term gains, holding periods, and reporting.',
+   'Taxes', 'Intermediate', 5, false, null),
+
+  ('schwab-capital-gains-tax-rates',
+   'Capital Gains Tax Rates: Short-term vs. Long-term',
+   'https://www.schwab.com/learn/story/how-are-capital-gains-taxed',
+   'Charles Schwab',
+   'Why holding > 1 year matters — current short-term and long-term brackets with worked examples.',
+   'Taxes', 'Beginner', 6, false, null),
+
+  ('fidelity-tax-loss-harvesting',
+   'Tax-loss harvesting: A way to lower your taxes',
+   'https://www.fidelity.com/viewpoints/personal-finance/tax-loss-harvesting',
+   'Fidelity',
+   'Realizing losses to offset gains — rules, the wash-sale trap, and when it''s worth the trouble.',
+   'Taxes', 'Advanced', 10, false, null),
+
+  ('fidelity-crypto-for-beginners',
+   'Crypto for Beginners',
+   'https://www.fidelity.com/learning-center/trading-investing/crypto/crypto-for-beginners',
+   'Fidelity',
+   'What crypto is, how it''s stored, the major types, and how to think about it as part of a portfolio.',
+   'Crypto', 'Beginner', 11, false, null),
+
+  ('finra-bitcoin-basics',
+   'Bitcoin Basics',
+   'https://www.finra.org/investors/insights/bitcoin-basics',
+   'FINRA',
+   'A regulator''s primer on Bitcoin: how it works, key risks, and what investor protections do and don''t apply.',
+   'Crypto', 'Beginner', 8, false, null),
+
+  ('vanguard-inflation-what-to-know',
+   'Inflation: What to know and what to do',
+   'https://investor.vanguard.com/investor-resources-education/article/inflation-what-to-know-and-what-to-do',
+   'Vanguard',
+   'How inflation erodes returns and which asset classes have historically held up best.',
+   'Macro & Economy', 'Beginner', 6, false, null)
+on conflict (slug) do nothing;
