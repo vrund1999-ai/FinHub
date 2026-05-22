@@ -1,8 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { Guide } from "@/lib/guides/queries";
+import { useEducationSearch } from "./EducationSearchProvider";
 
 export function PopularGuides({ guides }: { guides: Guide[] }) {
+  const { query, filteredGuides } = useEducationSearch();
+  const isSearching = query.trim().length > 0;
+  const visible = isSearching ? filteredGuides : guides;
+
   return (
     <section className="flex flex-col gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
       <div className="flex items-center justify-between">
@@ -16,13 +23,15 @@ export function PopularGuides({ guides }: { guides: Guide[] }) {
           All guides <ArrowUpRight size={12} />
         </Link>
       </div>
-      {guides.length === 0 ? (
+      {visible.length === 0 ? (
         <p className="py-2 text-xs text-[var(--color-text-muted)]">
-          No featured guides yet.
+          {isSearching
+            ? `No guides match "${query.trim()}".`
+            : "No featured guides yet."}
         </p>
       ) : (
         <ul className="flex flex-col">
-          {guides.map((guide, i) => (
+          {visible.map((guide, i) => (
             <li
               key={guide.id}
               className={
@@ -32,7 +41,9 @@ export function PopularGuides({ guides }: { guides: Guide[] }) {
               }
             >
               <span className="text-xs font-medium tabular-nums text-[var(--color-text-dim)]">
-                {String(guide.featured_rank ?? i + 1).padStart(2, "0")}
+                {String(
+                  isSearching ? i + 1 : guide.featured_rank ?? i + 1,
+                ).padStart(2, "0")}
               </span>
               <a
                 href={guide.url}

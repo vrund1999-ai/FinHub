@@ -1,10 +1,10 @@
 "use client";
 
 import { CATEGORIES, DIFFICULTIES, type Category, type Difficulty } from "@/lib/glossary/categories";
-import { useGlossary } from "./GlossaryProvider";
+import { useEducationSearch } from "./EducationSearchProvider";
 
 export function GlossaryFilters() {
-  const { categories, difficulties, toggleCategory, toggleDifficulty } = useGlossary();
+  const { categories, difficulties, toggleCategory, toggleDifficulty } = useEducationSearch();
 
   return (
     <div className="flex flex-col gap-3">

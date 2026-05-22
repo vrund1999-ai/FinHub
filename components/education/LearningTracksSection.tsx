@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { LearningTrack, UserTrackProgress } from "@/lib/tracks/types";
 import { TrackCard } from "./TrackCard";
+import { useEducationSearch } from "./EducationSearchProvider";
 
 export function LearningTracksSection({
   tracks,
@@ -10,6 +13,10 @@ export function LearningTracksSection({
   tracks: LearningTrack[];
   progress: UserTrackProgress[];
 }) {
+  const { query, filteredTracks } = useEducationSearch();
+  const isSearching = query.trim().length > 0;
+  const visible = isSearching ? filteredTracks : tracks;
+
   const progressByTrack = new Map(progress.map((p) => [p.track_id, p]));
   return (
     <section className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
@@ -24,13 +31,15 @@ export function LearningTracksSection({
           View all tracks <ArrowUpRight size={12} />
         </Link>
       </div>
-      {tracks.length === 0 ? (
+      {visible.length === 0 ? (
         <p className="rounded-md border border-dashed border-[var(--color-border)] p-6 text-center text-xs text-[var(--color-text-muted)]">
-          No tracks published yet.
+          {isSearching
+            ? `No tracks match "${query.trim()}".`
+            : "No tracks published yet."}
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {tracks.map((track) => (
+          {visible.map((track) => (
             <TrackCard
               key={track.id}
               track={track}

@@ -4,7 +4,7 @@ import { ALPHABET } from "./data";
 import { AlphabetGrid } from "./AlphabetGrid";
 import { GlossaryEntry } from "./GlossaryEntry";
 import { GlossaryFilters } from "./GlossaryFilters";
-import { useGlossary } from "./GlossaryProvider";
+import { useEducationSearch } from "./EducationSearchProvider";
 
 export function GlossarySection() {
   const {
@@ -15,7 +15,7 @@ export function GlossarySection() {
     setLetter,
     hasActiveFilters,
     clearFilters,
-  } = useGlossary();
+  } = useEducationSearch();
 
   const grouped = new Map<string, typeof filteredTerms>();
   for (const t of filteredTerms) {
