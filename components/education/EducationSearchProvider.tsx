@@ -3,10 +3,16 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { GlossaryListItem } from "@/lib/glossary/queries";
 import type { Category, Difficulty } from "@/lib/glossary/categories";
+import type { LearningTrack } from "@/lib/tracks/types";
+import type { Guide } from "@/lib/guides/queries";
 
-type GlossaryContextValue = {
+type EducationSearchContextValue = {
   allTerms: GlossaryListItem[];
   filteredTerms: GlossaryListItem[];
+  allTracks: LearningTrack[];
+  filteredTracks: LearningTrack[];
+  allGuides: Guide[];
+  filteredGuides: Guide[];
   activeLetters: ReadonlySet<string>;
   query: string;
   letter: string | null;
@@ -20,19 +26,23 @@ type GlossaryContextValue = {
   hasActiveFilters: boolean;
 };
 
-const GlossaryContext = createContext<GlossaryContextValue | null>(null);
+const EducationSearchContext = createContext<EducationSearchContextValue | null>(null);
 
-export function useGlossary(): GlossaryContextValue {
-  const ctx = useContext(GlossaryContext);
-  if (!ctx) throw new Error("useGlossary must be used inside <GlossaryProvider>");
+export function useEducationSearch(): EducationSearchContextValue {
+  const ctx = useContext(EducationSearchContext);
+  if (!ctx) throw new Error("useEducationSearch must be used inside <EducationSearchProvider>");
   return ctx;
 }
 
-export function GlossaryProvider({
+export function EducationSearchProvider({
   allTerms,
+  allTracks,
+  allGuides,
   children,
 }: {
   allTerms: GlossaryListItem[];
+  allTracks: LearningTrack[];
+  allGuides: Guide[];
   children: ReactNode;
 }) {
   const [query, setQuery] = useState("");
@@ -60,6 +70,24 @@ export function GlossaryProvider({
       return true;
     });
   }, [allTerms, query, letter, categories, difficulties]);
+
+  const filteredTracks = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return allTracks;
+    return allTracks.filter((t) => {
+      const haystack = `${t.title} ${t.description ?? ""} ${t.category ?? ""}`.toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [allTracks, query]);
+
+  const filteredGuides = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return allGuides;
+    return allGuides.filter((g) => {
+      const haystack = `${g.title} ${g.description ?? ""} ${g.source ?? ""} ${g.category ?? ""}`.toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [allGuides, query]);
 
   const toggleCategory = useCallback((value: Category) => {
     setCategories((prev) => {
@@ -89,10 +117,14 @@ export function GlossaryProvider({
   const hasActiveFilters =
     query.length > 0 || letter !== null || categories.size > 0 || difficulties.size > 0;
 
-  const value = useMemo<GlossaryContextValue>(
+  const value = useMemo<EducationSearchContextValue>(
     () => ({
       allTerms,
       filteredTerms,
+      allTracks,
+      filteredTracks,
+      allGuides,
+      filteredGuides,
       activeLetters,
       query,
       letter,
@@ -108,6 +140,10 @@ export function GlossaryProvider({
     [
       allTerms,
       filteredTerms,
+      allTracks,
+      filteredTracks,
+      allGuides,
+      filteredGuides,
       activeLetters,
       query,
       letter,
@@ -120,5 +156,5 @@ export function GlossaryProvider({
     ],
   );
 
-  return <GlossaryContext.Provider value={value}>{children}</GlossaryContext.Provider>;
+  return <EducationSearchContext.Provider value={value}>{children}</EducationSearchContext.Provider>;
 }
