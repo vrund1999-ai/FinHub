@@ -13,12 +13,14 @@ import {
   DEFAULT_NEWS_CATEGORY,
   SORT_OPTIONS,
   newsArticles,
-  earningsThisWeek,
   trendingTickers,
   economicCalendar,
 } from "@/components/news/data";
+import { getEarningsThisWeek } from "@/lib/earnings/getEarningsThisWeek";
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const earningsThisWeek = await getEarningsThisWeek();
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader activeNavItem="News" />

@@ -78,7 +78,7 @@ There is no `lint` script and no test framework. If a change feels test-worthy, 
 ## Things to avoid
 
 - Don't commit `.env.local` (already gitignored — keep it that way).
-- Don't introduce the Supabase **service_role** key anywhere; this app uses only the **anon** key, which is browser-safe.
+- Don't put the Supabase **service_role** key on any client-reachable path. It is allowed **only** in `lib/supabase/admin.ts` (marked `"server-only"`), imported exclusively by `/api/cron/*` routes that need to bypass RLS for scheduled writes. Never `NEXT_PUBLIC_`-prefix it. Everything else uses the anon key.
 - Don't bypass RLS by adding a service-role admin path on the client.
 - Don't add Apple OAuth wiring without checking with the user — the button currently shows a "Coming soon" alert by design.
 - Don't add new dependencies (state, form, validation, testing libraries) without explicit user approval. The minimal dep tree is intentional.

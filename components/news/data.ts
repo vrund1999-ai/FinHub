@@ -195,14 +195,6 @@ export type EarningsRow = {
   status: EarningsStatus;
 };
 
-export const earningsThisWeek: EarningsRow[] = [
-  { symbol: "AAPL", name: "Apple Inc.", day: "Today", when: "After close", status: "Pending" },
-  { symbol: "NVDA", name: "Nvidia Corp.", day: "Today", when: "Pre-market", status: "Beat" },
-  { symbol: "AMZN", name: "Amazon", day: "Thu", when: "After close", status: "Pending" },
-  { symbol: "INTC", name: "Intel Corp.", day: "Wed", when: "After close", status: "Miss" },
-  { symbol: "META", name: "Meta Platforms", day: "Tue", when: "After close", status: "Beat" },
-];
-
 export type TrendingTickerRow = {
   rank: number;
   symbol: string;
