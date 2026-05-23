@@ -66,6 +66,22 @@ export async function createAccountAction(
     return { ok: false, error: "You need to be signed in to continue." };
   }
 
+  // Refuse to overwrite an already-onboarded profile. The front-line OAuth
+  // and signUp checks should prevent us getting here, but this is the last
+  // line of defense against silently clobbering existing user data.
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("onboarded_at")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (existing?.onboarded_at) {
+    return {
+      ok: false,
+      error: "An account with this email already exists. Please log in.",
+    };
+  }
+
   const { error } = await supabase.from("profiles").upsert(
     {
       id: user.id,

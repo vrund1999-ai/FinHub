@@ -7,7 +7,14 @@ import { PasswordField } from "@/components/auth/PasswordField";
 import { PrimaryButton } from "@/components/auth/PrimaryButton";
 import { Checkbox } from "@/components/auth/Checkbox";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reason?: string }>;
+}) {
+  const { reason } = await searchParams;
+  const showAccountExists = reason === "account_exists";
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -19,9 +26,23 @@ export default function LoginPage() {
         </p>
       </div>
 
+      {showAccountExists && (
+        <p className="text-sm text-red-400" role="alert">
+          An account with this email already exists. Please log in to continue.
+        </p>
+      )}
+
       <div className="flex flex-col gap-3">
-        <OAuthButton variant="google" label="Continue with Google" />
-        <OAuthButton variant="apple" label="Continue with Apple" />
+        <OAuthButton
+          variant="google"
+          label="Continue with Google"
+          forceAccountPicker
+        />
+        <OAuthButton
+          variant="apple"
+          label="Continue with Apple"
+          forceAccountPicker
+        />
       </div>
 
       <OrDivider label="or sign in with email" />
