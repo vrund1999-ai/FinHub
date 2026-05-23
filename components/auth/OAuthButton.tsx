@@ -9,9 +9,13 @@ type Variant = "google" | "apple";
 export function OAuthButton({
   variant,
   label,
+  next = "/",
+  forceAccountPicker = false,
 }: {
   variant: Variant;
   label: string;
+  next?: string;
+  forceAccountPicker?: boolean;
 }) {
   const Icon = variant === "google" ? GoogleIcon : AppleIcon;
   const isApple = variant === "apple";
@@ -28,7 +32,11 @@ export function OAuthButton({
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/signup`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        // Force the Google chooser on signup so users can pick which account
+        // they want — Google otherwise auto-selects when only one account is
+        // signed in, hiding the "use a different account" option.
+        queryParams: forceAccountPicker ? { prompt: "select_account" } : undefined,
       },
     });
   }

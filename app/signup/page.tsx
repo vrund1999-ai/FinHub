@@ -49,19 +49,24 @@ function scorePassword(pw: string): 0 | 1 | 2 | 3 | 4 {
   return s as 0 | 1 | 2 | 3 | 4;
 }
 
-function mapSignUpError(message: string | undefined): string {
-  if (!message) return "Something went wrong. Please try again.";
+type FormError =
+  | { kind: "account_exists" }
+  | { kind: "message"; text: string };
+
+function mapSignUpError(message: string | undefined): FormError {
+  if (!message) return { kind: "message", text: "Something went wrong. Please try again." };
   const m = message.toLowerCase();
-  if (m.includes("already registered") || m.includes("already been registered")) {
-    return "An account with this email already exists. Try logging in instead.";
-  }
-  if (m.includes("user already")) {
-    return "An account with this email already exists. Try logging in instead.";
+  if (
+    m.includes("already registered") ||
+    m.includes("already been registered") ||
+    m.includes("user already")
+  ) {
+    return { kind: "account_exists" };
   }
   if (m.includes("rate limit") || m.includes("too many")) {
-    return "Too many attempts. Please wait a minute and try again.";
+    return { kind: "message", text: "Too many attempts. Please wait a minute and try again." };
   }
-  return message;
+  return { kind: "message", text: message };
 }
 
 export default function SignupStep1Page() {
@@ -70,7 +75,7 @@ export default function SignupStep1Page() {
   const [user, setUser] = useState<User | null>(null);
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<FormError | null>(null);
   const [confirmEmailSent, setConfirmEmailSent] = useState(false);
   const [confirmEmailAddress, setConfirmEmailAddress] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -80,9 +85,23 @@ export default function SignupStep1Page() {
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       const u = data.user;
       if (!u) return;
+
+      // If the signed-in user has already completed onboarding, bounce them
+      // home so they can't accidentally re-run the flow and clobber their
+      // profile via createAccountAction's upsert.
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarded_at")
+        .eq("id", u.id)
+        .maybeSingle();
+      if (profile?.onboarded_at) {
+        router.replace("/");
+        return;
+      }
+
       setUser(u);
       // Read latest draft (hydration from sessionStorage may have completed
       // after this effect's closure was created) so we don't clobber values
@@ -101,7 +120,7 @@ export default function SignupStep1Page() {
       }
       update(patch);
     });
-  }, [update]);
+  }, [update, router]);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -142,9 +161,10 @@ export default function SignupStep1Page() {
     if (Object.keys(errors).length > 0) return;
 
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
-      setFormError(
-        "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local.",
-      );
+      setFormError({
+        kind: "message",
+        text: "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local.",
+      });
       return;
     }
 
@@ -170,6 +190,14 @@ export default function SignupStep1Page() {
 
       if (error) {
         setFormError(mapSignUpError(error.message));
+        return;
+      }
+
+      // Supabase signals "email already exists" by returning a user with
+      // an empty identities array (no error, no session) when "Confirm email"
+      // is enabled. Treat it the same as the explicit "already registered" error.
+      if (data.user && (data.user.identities?.length ?? 0) === 0) {
+        setFormError({ kind: "account_exists" });
         return;
       }
 
@@ -284,8 +312,18 @@ export default function SignupStep1Page() {
       {!signedIn && (
         <>
           <div className="flex flex-col gap-3">
-            <OAuthButton variant="google" label="Sign up with Google" />
-            <OAuthButton variant="apple" label="Sign up with Apple" />
+            <OAuthButton
+              variant="google"
+              label="Sign up with Google"
+              next="/signup/experience"
+              forceAccountPicker
+            />
+            <OAuthButton
+              variant="apple"
+              label="Sign up with Apple"
+              next="/signup/experience"
+              forceAccountPicker
+            />
           </div>
 
           <OrDivider label="or sign up with email" />
@@ -339,7 +377,20 @@ export default function SignupStep1Page() {
 
         {formError && (
           <p className="text-sm text-red-400" role="alert">
-            {formError}
+            {formError.kind === "account_exists" ? (
+              <>
+                An account with this email already exists.{" "}
+                <Link
+                  href="/login"
+                  className="font-medium underline hover:no-underline"
+                >
+                  Log in
+                </Link>{" "}
+                instead.
+              </>
+            ) : (
+              formError.text
+            )}
           </p>
         )}
 
