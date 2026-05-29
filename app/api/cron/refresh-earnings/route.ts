@@ -9,7 +9,7 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const DAYS_FORWARD = 14;
+const DAYS_FORWARD = 90;
 
 function isoDate(d: Date): string {
   return d.toISOString().slice(0, 10);
