@@ -41,7 +41,7 @@ export function EarningsThisWeek({ items }: { items: EarningsRow[] }) {
                 {row.name}
               </div>
               <div className="text-[11px] text-[var(--color-text-muted)]">
-                {row.day} · {row.when}
+                {row.day} · {row.date} · {row.when}
               </div>
             </div>
             <StatusBadge label={row.status} variant={statusVariant[row.status]} />

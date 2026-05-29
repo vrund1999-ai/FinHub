@@ -191,6 +191,7 @@ export type EarningsRow = {
   symbol: string;
   name: string;
   day: string;
+  date: string;
   when: string;
   status: EarningsStatus;
 };
