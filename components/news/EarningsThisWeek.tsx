@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { EarningsRow, EarningsStatus } from "./data";
 import { StatusBadge } from "./StatusBadge";
@@ -15,12 +16,12 @@ export function EarningsThisWeek({ items }: { items: EarningsRow[] }) {
         <h2 className="text-[11px] font-semibold tracking-[0.16em] text-[var(--color-text-muted)]">
           EARNINGS THIS WEEK
         </h2>
-        <a
-          href="#"
+        <Link
+          href="/news/earnings"
           className="inline-flex items-center gap-0.5 text-xs font-medium text-[var(--color-accent)] hover:underline"
         >
           Calendar <ArrowUpRight size={12} />
-        </a>
+        </Link>
       </div>
       <ul className="flex flex-col">
         {items.map((row, i) => (
