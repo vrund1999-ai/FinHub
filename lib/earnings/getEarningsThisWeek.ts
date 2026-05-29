@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { EarningsRow } from "@/components/news/data";
 import {
   deriveStatus,
+  formatDate,
   formatDay,
   formatWhen,
   type EarningsHour,
@@ -45,6 +46,7 @@ export async function getEarningsThisWeek(limit = 8): Promise<EarningsRow[]> {
     symbol: row.symbol,
     name: extractName(row),
     day: formatDay(row.report_date, today),
+    date: formatDate(row.report_date),
     when: formatWhen(row.hour),
     status: deriveStatus(row.eps_estimate, row.eps_actual),
   }));

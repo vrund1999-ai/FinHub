@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { StatusBadge } from "@/components/news/StatusBadge";
 import {
   WEEKDAY,
+  formatDate,
   formatDay,
   formatWhen,
   parseUtcDate,
@@ -268,7 +269,7 @@ export function EarningsCalendarView({ rows, todayIso }: Props) {
                   </div>
                   <div className="text-[11px] text-[var(--color-text-muted)]">
                     {formatDay(row.reportDate, todayUtc)} ·{" "}
-                    {formatWhen(row.hour)}
+                    {formatDate(row.reportDate)} · {formatWhen(row.hour)}
                   </div>
                 </div>
                 <StatusBadge
