@@ -21,6 +21,14 @@ export function formatDay(reportDate: string, today: Date): string {
   return WEEKDAY[d.getUTCDay()];
 }
 
+export function formatDate(reportDate: string): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(parseUtcDate(reportDate));
+}
+
 export function formatWhen(hour: EarningsHour): string {
   switch (hour) {
     case "bmo":
