@@ -14,12 +14,13 @@ import {
   SORT_OPTIONS,
   newsArticles,
   trendingTickers,
-  economicCalendar,
 } from "@/components/news/data";
 import { getEarningsThisWeek } from "@/lib/earnings/getEarningsThisWeek";
+import { getEconomicEventsThisWeek } from "@/lib/economic/getEconomicEventsThisWeek";
 
 export default async function NewsPage() {
   const earningsThisWeek = await getEarningsThisWeek();
+  const economicEvents = await getEconomicEventsThisWeek();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -37,7 +38,7 @@ export default async function NewsPage() {
           <aside className="flex flex-col gap-6">
             <EarningsThisWeek items={earningsThisWeek} />
             <TrendingTickers items={trendingTickers} />
-            <EconomicCalendar items={economicCalendar} />
+            <EconomicCalendar items={economicEvents} />
           </aside>
         </div>
       </main>
