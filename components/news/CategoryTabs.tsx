@@ -1,18 +1,24 @@
+import Link from "next/link";
+import { buildNewsHref } from "@/lib/news/href";
+import type { NewsCategory, SortOption } from "./data";
+
 export function CategoryTabs({
   tabs,
   active,
+  params,
 }: {
-  tabs: readonly string[];
-  active: string;
+  tabs: readonly NewsCategory[];
+  active: NewsCategory;
+  params: { view: SortOption; q?: string };
 }) {
   return (
     <div className="flex flex-wrap items-center gap-6 border-b border-[var(--color-border)]">
       {tabs.map((tab) => {
         const isActive = tab === active;
         return (
-          <button
+          <Link
             key={tab}
-            type="button"
+            href={buildNewsHref({ category: tab, view: params.view, q: params.q })}
             aria-current={isActive ? "page" : undefined}
             className={
               isActive
@@ -21,7 +27,7 @@ export function CategoryTabs({
             }
           >
             {tab}
-          </button>
+          </Link>
         );
       })}
     </div>
