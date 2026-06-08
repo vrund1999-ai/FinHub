@@ -13,11 +13,11 @@ import {
   DEFAULT_NEWS_CATEGORY,
   SORT_OPTIONS,
   trendingTickers,
-  economicCalendar,
   type NewsCategory,
   type SortOption,
 } from "@/components/news/data";
 import { getEarningsThisWeek } from "@/lib/earnings/getEarningsThisWeek";
+import { getEconomicEventsThisWeek } from "@/lib/economic/getEconomicEventsThisWeek";
 import { getTopStories } from "@/lib/news/getTopStories";
 
 function parseView(value: string | undefined): SortOption {
@@ -42,9 +42,10 @@ export default async function NewsPage({
   const category = parseCategory(sp.category);
   const query = sp.q?.trim() || undefined;
 
-  const [articles, earningsThisWeek] = await Promise.all([
+  const [articles, earningsThisWeek, economicEvents] = await Promise.all([
     getTopStories({ view, category, query }),
     getEarningsThisWeek(),
+    getEconomicEventsThisWeek(),
   ]);
 
   return (
@@ -73,7 +74,7 @@ export default async function NewsPage({
           <aside className="flex flex-col gap-6">
             <EarningsThisWeek items={earningsThisWeek} />
             <TrendingTickers items={trendingTickers} />
-            <EconomicCalendar items={economicCalendar} />
+            <EconomicCalendar items={economicEvents} />
           </aside>
         </div>
       </main>

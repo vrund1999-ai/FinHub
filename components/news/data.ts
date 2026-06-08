@@ -127,17 +127,3 @@ export const trendingTickers: TrendingTickerRow[] = [
   { rank: 4, symbol: "META", name: "Meta Platforms", deltaPct: 3.18, articleCount: 19 },
   { rank: 5, symbol: "BTC", name: "Bitcoin", deltaPct: 1.84, articleCount: 16 },
 ];
-
-export type EventImportance = "HIGH" | "MED";
-export type EconomicEvent = {
-  importance: EventImportance;
-  name: string;
-  day: string;
-  time: string;
-};
-
-export const economicCalendar: EconomicEvent[] = [
-  { importance: "HIGH", name: "Core PCE deflator", day: "Today", time: "8:30am ET" },
-  { importance: "MED", name: "Initial jobless claims", day: "Thu", time: "8:30am ET" },
-  { importance: "HIGH", name: "Non-farm payrolls", day: "Fri", time: "8:30am ET" },
-];
