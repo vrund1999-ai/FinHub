@@ -21,7 +21,14 @@ export function ArticleCard({ article }: { article: NewsArticle }) {
           <span>{article.timeAgo}</span>
         </div>
         <h3 className="text-base font-semibold leading-snug text-[var(--color-text)]">
-          {article.headline}
+          <a
+            href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-[var(--color-accent)]"
+          >
+            {article.headline}
+          </a>
         </h3>
         {article.summary ? (
           <p className="text-sm leading-relaxed text-[var(--color-text-muted)]">
