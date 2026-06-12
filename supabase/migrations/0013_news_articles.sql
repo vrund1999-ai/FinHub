@@ -25,5 +25,6 @@ alter table public.news_articles enable row level security;
 
 -- Public read; no write policy means the anon key cannot write. Writes happen
 -- only via the service_role key in /api/cron/refresh-news.
+drop policy if exists "news_articles_select_public" on public.news_articles;
 create policy "news_articles_select_public" on public.news_articles
   for select using (true);
